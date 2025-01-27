@@ -1,0 +1,89 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2707
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red14\green0\blue255;\red0\green128\blue19;\red167\green9\blue245;
+}
+{\*\expandedcolortbl;;\csgenericrgb\c5490\c0\c100000;\csgenericrgb\c0\c50196\c7451;\csgenericrgb\c65490\c3529\c96078;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs20 \cf2 function \cf0 [log_eh,log_ehat,log_edash] = mae107_hw3_2(x0)\
+\cf3 % mae107_hw3_2 computes the derivative at x0=1 using difference\
+% approximations for the function f = exp(-2*x) * cos(pi*x) for h = 10^j, j in [0,10];\
+%   \
+% input variable:\
+%   x0 - x values\
+% \
+% output variables:\
+%   log_eh - log10 values of eh\
+%   log_ehat - log10 values of ehat\
+%   log_edash - log10 values of edash\
+%\
+% Call format: [log_eh,log_ehat,log_edash] = mae107_hw3_2(x0)\
+\
+\cf0 Dh = []; \cf3 % creating an empty array to store Dh values\
+\cf0 eh = []; \cf3 % creating an empty array to store eh values\
+\cf0 Dhat = []; \cf3 % creating an empty array to store Dhat values\
+\cf0 ehat = []; \cf3 % creating an empty array to store ehat values\
+\cf0 Ddash = []; \cf3 % creating an empty array to store Ddash values\
+\cf0 edash = []; \cf3 % creating an empty array to store edash values\
+\cf0 h_arr = []; \cf3 % creating an empty array to store log10 of h values\
+\
+% x0 = 1; \
+\cf0 fprime_x0 = - 2*exp(-2*x0)*cos(pi*x0) - pi*exp(-2*x0)*sin(pi*x0); \cf3 % calculating derivative of f at x0\
+\cf0 fx0 = exp(-2*x0) * cos(pi*x0); \cf3 % computing f at x0\
+\
+\cf2 for \cf0 j = 0:10 \cf3 % running a loop for j in h\
+\cf0     h = 10^(-j);\
+    h_arr = [h_arr, log10(h)]; \cf3 % storing log10 for h values in an array\
+\
+\cf0     \cf3 % Dh = f(x0 +h) - f(x0) / h\
+\cf0     x = x0 + h; \cf3 % setting function f input x\
+\cf0     Dh = [Dh, ((exp(-2*x) * cos(pi*x) - fx0) / h)]; \cf3 % storing Dh value for h\
+\cf0     eh = [eh, abs((Dh(j+1)-fprime_x0))]; \cf3 % storing eh value; eh = |Dh - fprime|\
+\cf0     x = 0; \cf3 % changing x to 0 for the next iteration of the loop \
+\cf0     \
+    \cf3 % Dhat = f(x0 +h) - f(x0-h) / 2h\
+\cf0     n = x0 + h; \cf3 % setting function f input n\
+\cf0     m = x0 - h; \cf3 % setting function f input m\
+\cf0     fn = exp(-2*n) * cos(pi*n); \cf3 % computing f(x0 +h)\
+\cf0     fm = exp(-2*m) * cos(pi*m); \cf3 % computing f(x0-h)\
+\cf0     Dhat = [Dhat, ( (fn-fm) / (2*h) )]; \cf3 % storing Dhat value for h\
+\cf0     ehat = [ehat, abs((Dhat(j+1)-fprime_x0))]; \cf3 % storing ehat value; eh = |Dhat - fprime|\
+\cf0     n = 0; m = 0; \cf3 % changing n & m to 0 for the next iteration of the loop \
+\
+\cf0     \cf3 % Ddash\
+\cf0     a = 1 + (2*h); \cf3 % setting function f input a\
+\cf0     b = 1 - (2*h); \cf3 % setting function f input b\
+\cf0     fa = exp(-2*a) * cos(pi*a); \cf3 % computing f(x0 + 2h)\
+\cf0     fb = exp(-2*b) * cos(pi*b); \cf3 % computing f(x0 - 2h)\
+\cf0     Ddash = [Ddash, ( ( (8*(fn-fm)) - (fa-fb) ) / (12*h))]; \cf3 % storing Ddash value for h\
+\cf0     edash = [edash, ( abs(Ddash(j+1)-fprime_x0)) ]; \cf3 % storing ehat value; eh = |Ddash - fprime|\
+\cf0     a = 0; b = 0; \cf3 % changing a & b to 0 for the next iteration of the loop \
+\
+\cf2 end \cf3 % for on line 21\
+\
+% Dh\
+% Dhat\
+% Ddash\
+% eh\
+% ehat\
+% edash\
+% h_arr\
+\
+\cf0 log_eh = [log10(eh)]; \cf3 % storing log10 values of eh\
+\cf0 log_ehat = [log10(ehat)]; \cf3 % storing log10 values of ehat\
+\cf0 log_edash = [log10(edash)]; \cf3 % storing log10 values of edash\
+\
+\cf0 figure(1); hold \cf4 on\cf0 ;\
+plot(h_arr, log_eh, \cf4 '-b'\cf0 ,\cf4 "LineWidth"\cf0 ,2); \cf3 % plotting log10 values of eh\
+\cf0 plot(h_arr, log_ehat,\cf4 '-r'\cf0 ,\cf4 "LineWidth"\cf0 ,2); \cf3 % plotting log10 values of ehat\
+\cf0 plot(h_arr, log_edash,\cf4 '-g'\cf0 ,\cf4 "LineWidth"\cf0 ,2); \cf3 % plotting log10 values of edash\
+\cf0 legend(\cf4 'log10(eh)'\cf0 , \cf4 'log10(ehat)'\cf0 ,\cf4 'log10(edash'\cf0 );\
+xlabel(\cf4 'log10(h)'\cf0 ); ylabel(\cf4 'log10(e)'\cf0 ); title(\cf4 'log10(error) values vs log10(h)'\cf0 );\
+grid \cf4 on\cf0 ;\
+hold \cf4 off\cf0 ;\
+\
+\cf2 end \cf3 % the function\
+\
+}
